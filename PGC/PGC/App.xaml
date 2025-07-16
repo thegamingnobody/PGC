@@ -4,6 +4,49 @@
              xmlns:local="clr-namespace:PGC"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <local:IsGroupSelectedToBrushConverter x:Key="SelectedGroupBorderBrushConverter" />
+        <local:IsGroupSelectedToBackgroundConverter x:Key="GroupSelectedBackgroundConverter" />
+
+        <SolidColorBrush Color="#40904a"
+                         x:Key="OJGreen" />
+        <SolidColorBrush Color="#f4efe1"
+                         x:Key="OJBeige" />
+
+        <!--<Style TargetType="Button" x:Key="SelectableNotSelected">
+            <Style.Setters>
+                <Setter Property="BorderBrush"
+                        Value="Red" />
+            </Style.Setters>
+        </Style>
+        
+        <Style TargetType="Button" x:Key="SelectableSelected">
+            <Style.Setters>
+                <Setter Property="BorderBrush"
+                        Value="Purple" />
+            </Style.Setters>
+        </Style>-->
+
+        <Style x:Key="SelectableGroupButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background"
+                    Value="LightGray" />
+            <Setter Property="BorderBrush"
+                    Value="Gray" />
+            <Setter Property="Foreground"
+                    Value="Black" />
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}"
+                             Value="True">
+                    <Setter Property="Background"
+                            Value="CornflowerBlue" />
+                    <Setter Property="BorderBrush"
+                            Value="DarkBlue" />
+                    <Setter Property="Foreground"
+                            Value="White" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

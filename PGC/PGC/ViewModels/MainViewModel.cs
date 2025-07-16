@@ -12,16 +12,44 @@ namespace PGC.ViewModels
         private ObservableCollection<Player> _players;
 
         [ObservableProperty]
-        private string _newPlayerName;
+        private string _newPlayerName = string.Empty;
 
         //// Sorted view of players
         //[ObservableProperty]
         //private ObservableCollection<Player> _sortedPlayers;
 
+        [ObservableProperty]
+        private ObservableCollection<PlayerGroup> _playerGroups;
+
+        [ObservableProperty]
+        private PlayerGroup _selectedGroup;
+
+        [ObservableProperty]
+        private int _groupCount = 3;
+
+        [ObservableProperty]
+        private string _groupCountText = string.Empty;
+
         // Constructor additions
         public MainViewModel()
         {
             Players = new ObservableCollection<Player>();
+            PlayerGroups = new ObservableCollection<PlayerGroup>();
+
+            // Initialize with some default players
+            Players.Add(new Player { Name = "Alice", Score = 10 });
+            Players.Add(new Player { Name = "Bob", Score = 20 });
+            Players.Add(new Player { Name = "Charlie", Score = 15 });
+            Players.Add(new Player { Name = "Diana", Score = 25 });
+            Players.Add(new Player { Name = "Eve", Score = 30 });
+            Players.Add(new Player { Name = "Frank", Score = 5 });
+            Players.Add(new Player { Name = "Grace", Score = 12 });
+            Players.Add(new Player { Name = "Heidi", Score = 18 });
+            Players.Add(new Player { Name = "Ivan", Score = 22 });
+
+            CreateRandomGroups();
+
+            SelectedGroup = PlayerGroups.First();
         }
 
         [RelayCommand]
@@ -36,8 +64,16 @@ namespace PGC.ViewModels
                 Score = 0 // default score
             };
 
-            if (!Players.Contains(player))
-                Players.Add(player);
+            foreach (var p in Players)
+            {
+                if (p.Name == player.Name)
+                {
+                    // Player already exists, do not add
+                    return;
+                }
+            }
+
+            Players.Add(player);
         }
 
         [RelayCommand]
@@ -47,5 +83,87 @@ namespace PGC.ViewModels
                 Players.Remove(player);
         }
 
+        [RelayCommand]
+        void CreateRandomGroups()
+        {
+            if (GroupCount <= 0 || Players.Count == 0)
+                return;
+
+            PlayerGroups.Clear();
+
+            var rnd = new Random();
+            var shuffled = Players.OrderBy(_ => rnd.Next()).ToList();
+            var groups = Enumerable.Range(0, GroupCount).Select(i =>
+                new PlayerGroup($"Group {i + 1}", new ObservableCollection<Player>())
+            ).ToList();
+
+            for (int i = 0; i < shuffled.Count; i++)
+            {
+                groups[i % GroupCount].Players.Add(shuffled[i]);
+            }
+
+            foreach (var group in groups)
+                PlayerGroups.Add(group);
+
+            SelectedGroup = PlayerGroups.FirstOrDefault();
+        }
+
+        public bool IsGroupSelected(PlayerGroup group)
+        {
+            return group.IsSelected;
+        }
+
+        [RelayCommand]
+        void SelectGroup(PlayerGroup group)
+        {
+            foreach (var g in PlayerGroups)
+                g.IsSelected = false;
+
+            group.IsSelected = true;
+            SelectedGroup = group;
+        }
+
+        [RelayCommand]
+        void AddPointsToSelectedGroup()
+        {
+            if (SelectedGroup == null)
+                return;
+
+            foreach (var player in SelectedGroup.Players)
+            {
+                if (Players.Contains(player))
+                {
+                    foreach (var p in Players)
+                    {
+                        if (p.Name == player.Name)
+                        {
+                            p.Score += 1; // Increment score by 1
+                        }
+                    }
+                }
+            }
+
+            
+        }
+
+        partial void OnGroupCountTextChanged(string value)
+        {
+            if (int.TryParse(value, out int count))
+            {
+                GroupCount = count;
+            }
+            else
+            {
+                GroupCount = 0; // or whatever fallback
+            }
+        }
+
+        [RelayCommand]
+        void SaveGroups()
+        {
+            // Implement saving logic here, e.g., to a file or database
+            // This is a placeholder for the actual save functionality
+            System.Diagnostics.Debug.WriteLine("Groups saved!");
+        }
     }
 }

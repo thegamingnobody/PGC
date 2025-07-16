@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:PGC.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450"
+        Height="800"
         Width="800">
 
 
@@ -15,34 +15,133 @@
         <vm:MainViewModel />
     </Window.DataContext>
 
-    <Grid>
-        <ContentControl x:Name="match">
-            <Border Background="#FF2D2D30"
+
+    <Grid Background="#f4efe1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions >
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Save"
+                            Command="{Binding AddPlayerCommand}" />
+            </MenuItem>
+        </Menu>
+
+        <ContentControl x:Name="match" Grid.Row="1">
+            <Border Background="#40904a"
                     Margin="10">
-                <StackPanel>
-                    <TextBox Margin="10" Text="{Binding NewPlayerName}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Margin="10"
+                             Text="{Binding NewPlayerName}"
+                             Grid.Row="0" />
                     <Button Content="Add Player"
                             Command="{Binding AddPlayerCommand}"
-                            Margin="10" />
-                    <ListBox ItemsSource="{Binding Path=Players, UpdateSourceTrigger=PropertyChanged}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Name}"
-                                               Margin="5" />
-                                    <TextBlock Text="{Binding Score}"
-                                               Margin="5" />
-                                    <Button Content="Remove"
-                                            Command="{Binding ElementName=match, Path=DataContext.RemovePlayerCommand }"
-                                            CommandParameter="{Binding}"
-                                            Margin="10" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </StackPanel>
-
+                            Margin="10 0 10 0"
+                            Grid.Row="1" />
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  Grid.Row="2">
+                        <StackPanel>
+                            <ListBox ItemsSource="{Binding Path=Players, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="10">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}"
+                                                       Margin="5" />
+                                            <TextBlock Text="{Binding Score}"
+                                                       Margin="5" />
+                                            <Button Content="Remove"
+                                                    Command="{Binding ElementName=match, Path=DataContext.RemovePlayerCommand }"
+                                                    CommandParameter="{Binding}"
+                                                    Margin="10" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
             </Border>
         </ContentControl>
+
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Border Background="#40904a"
+                    Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Button Content="Generate Groups"
+                            Margin="10"
+                            Grid.ColumnSpan="2"
+                            Command="{Binding CreateRandomGroupsCommand}" />
+
+                    <Label Grid.Row="1"
+                           Content="Number of Groups:"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center" />
+
+                    <TextBox Margin="10"
+                             Text="{Binding GroupCountText, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Row="1"
+                             Grid.Column="2" />
+
+                    <Button Content="+1 point"
+                            Margin="10"
+                            Command="{Binding AddPointsToSelectedGroupCommand}"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2" />
+
+                    <ItemsControl ItemsSource="{Binding PlayerGroups, UpdateSourceTrigger=PropertyChanged}"
+                                  Grid.Row="3"
+                                  Grid.ColumnSpan="2">
+                        
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Padding="10"
+                                        Margin="5"
+                                        BorderThickness="2"
+                                        Style="{DynamicResource ResourceKey=SelectableGroupButtonStyle}"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.SelectGroupCommand}"
+                                        CommandParameter="{Binding}">
+
+                                    <StackPanel>
+                                        <ItemsControl ItemsSource="{Binding Players}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Name}"
+                                                               FontSize="12" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+
+            </Border>
+        </Grid>
     </Grid>
 </Window>

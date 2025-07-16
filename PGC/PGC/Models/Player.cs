@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace PGC.Models
 {
-    class Player
+    partial class Player : ObservableObject
     {
-        public string Name { get; set; } = string.Empty;
-        public int Score { get; set; }
+        [ObservableProperty]
+        private string _name = string.Empty;
+
+        [ObservableProperty]
+        private int _score;
 
         //Todo: images?
 
