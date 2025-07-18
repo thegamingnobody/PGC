@@ -47,11 +47,12 @@
 
                     <TextBox Margin="10"
                              Text="{Binding NewPlayerName}"
-                             Grid.Row="0" />
+                             Grid.Row="0"/>
                     <Button Content="Add Player"
                             Command="{Binding AddPlayerCommand}"
                             Margin="10 0 10 0"
                             Grid.Row="1" />
+
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                                   Grid.Row="2">
                         <StackPanel>
@@ -60,6 +61,8 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Rank}"
+                                                       Margin="5" />
                                             <TextBlock Text="{Binding Name}"
                                                        Margin="5" />
                                             <TextBlock Text="{Binding Score}"

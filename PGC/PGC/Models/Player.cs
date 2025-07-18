@@ -15,7 +15,8 @@ namespace PGC.Models
         [ObservableProperty]
         private int _score;
 
-        //Todo: images?
+        [ObservableProperty]
+        private int _rank;
 
     }
 }

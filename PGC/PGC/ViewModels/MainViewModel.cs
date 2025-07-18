@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using PGC.Models;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -39,16 +40,16 @@ namespace PGC.ViewModels
             Players = new ObservableCollection<Player>();
             PlayerGroups = new ObservableCollection<PlayerGroup>();
 
-            // Initialize with some default players
-            Players.Add(new Player { Name = "Alice", Score = 10 });
-            Players.Add(new Player { Name = "Bob", Score = 20 });
-            Players.Add(new Player { Name = "Charlie", Score = 15 });
-            Players.Add(new Player { Name = "Diana", Score = 25 });
-            Players.Add(new Player { Name = "Eve", Score = 30 });
-            Players.Add(new Player { Name = "Frank", Score = 5 });
-            Players.Add(new Player { Name = "Grace", Score = 12 });
-            Players.Add(new Player { Name = "Heidi", Score = 18 });
-            Players.Add(new Player { Name = "Ivan", Score = 22 });
+            //// Initialize with some default players
+            //Players.Add(new Player { Name = "Alice", Score = 10 });
+            //Players.Add(new Player { Name = "Bob", Score = 20 });
+            //Players.Add(new Player { Name = "Charlie", Score = 15 });
+            //Players.Add(new Player { Name = "Diana", Score = 25 });
+            //Players.Add(new Player { Name = "Eve", Score = 30 });
+            //Players.Add(new Player { Name = "Frank", Score = 5 });
+            //Players.Add(new Player { Name = "Grace", Score = 12 });
+            //Players.Add(new Player { Name = "Heidi", Score = 18 });
+            //Players.Add(new Player { Name = "Ivan", Score = 22 });
 
             CreateRandomGroups(); 
 
@@ -80,6 +81,8 @@ namespace PGC.ViewModels
             }
 
             Players.Add(player);
+
+            Players = new ObservableCollection<Player>(SortByScoreDescending(Players.ToList()));
         }
 
         [RelayCommand]
@@ -87,6 +90,8 @@ namespace PGC.ViewModels
         {
             if (Players.Contains(player))
                 Players.Remove(player);
+
+            Players = new ObservableCollection<Player>(SortByScoreDescending(Players.ToList()));
         }
 
         [RelayCommand]
@@ -112,6 +117,8 @@ namespace PGC.ViewModels
                 PlayerGroups.Add(group);
 
             SelectedGroup = PlayerGroups.FirstOrDefault();
+
+            Players = new ObservableCollection<Player>(SortByScoreDescending(Players.ToList()));
         }
 
         public bool IsGroupSelected(PlayerGroup group)
@@ -219,7 +226,14 @@ namespace PGC.ViewModels
         }
         public static List<Player> SortByScoreDescending(List<Player> players)
         {
-            return players.OrderByDescending(p => p.Score).ToList();
+            var result = players.OrderByDescending(p => p.Score).ToList();
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                result[i].Rank = i + 1; // Assign rank (1-based)
+            }
+
+            return result;
         }
     }
 }
