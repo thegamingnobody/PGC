@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using PGC.Models;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace PGC.ViewModels
 {
@@ -143,7 +146,7 @@ namespace PGC.ViewModels
                 }
             }
 
-            
+
         }
 
         partial void OnGroupCountTextChanged(string value)
@@ -161,9 +164,55 @@ namespace PGC.ViewModels
         [RelayCommand]
         void SaveGroups()
         {
-            // Implement saving logic here, e.g., to a file or database
-            // This is a placeholder for the actual save functionality
-            System.Diagnostics.Debug.WriteLine("Groups saved!");
+            //path > Save-path for Match data (to json)
+            string? path = DialogService.SaveFile();
+            if (path == null) return;
+            
+            MatchGame matchGame = new MatchGame
+            {
+                Players = Players.ToList(),
+                PlayerGroups = PlayerGroups.ToList()
+            };
+
+            string serializedObject = JsonConvert.SerializeObject(matchGame);
+            var test = Path.GetDirectoryName(path);
+            if (Path.Exists(test))
+            {
+                File.WriteAllText(path, serializedObject);
+            }
+        }
+
+        [RelayCommand]
+        void LoadGroups()
+        {
+            string? path = DialogService.OpenFile();
+            if (path == null) return;
+
+            Players.Clear();
+            PlayerGroups.Clear();
+
+            var match = new MatchGame();
+
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException();
+            }
+
+            var json = File.ReadAllText(path);
+            match = JsonConvert.DeserializeObject<MatchGame>(json);
+
+            foreach (Player player in match.Players)
+            {
+                Players.Add(player);
+            }
+
+            foreach (PlayerGroup group in match.PlayerGroups)
+            {
+                PlayerGroups.Add(group);
+            }
+
+            SelectedGroup = PlayerGroups.FirstOrDefault();
+
         }
     }
 }

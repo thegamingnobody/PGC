@@ -29,7 +29,9 @@
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem Header="_Save"
-                            Command="{Binding AddPlayerCommand}" />
+                          Command="{Binding SaveGroupsCommand}" />
+                <MenuItem Header="_Load"
+                          Command="{Binding LoadGroupsCommand}" />
             </MenuItem>
         </Menu>
 
