@@ -50,9 +50,12 @@ namespace PGC.ViewModels
             Players.Add(new Player { Name = "Heidi", Score = 18 });
             Players.Add(new Player { Name = "Ivan", Score = 22 });
 
-            CreateRandomGroups();
+            CreateRandomGroups(); 
 
-            SelectedGroup = PlayerGroups.First();
+            if (!(PlayerGroups.Count() == 0 || Players.Count() == 0))
+            {
+                SelectedGroup = PlayerGroups.First();
+            }
         }
 
         [RelayCommand]
@@ -146,7 +149,7 @@ namespace PGC.ViewModels
                 }
             }
 
-
+            Players = new ObservableCollection<Player>(SortByScoreDescending(Players.ToList()));
         }
 
         partial void OnGroupCountTextChanged(string value)
@@ -213,6 +216,10 @@ namespace PGC.ViewModels
 
             SelectedGroup = PlayerGroups.FirstOrDefault();
 
+        }
+        public static List<Player> SortByScoreDescending(List<Player> players)
+        {
+            return players.OrderByDescending(p => p.Score).ToList();
         }
     }
 }
