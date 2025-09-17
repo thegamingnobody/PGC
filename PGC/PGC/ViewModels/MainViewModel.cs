@@ -41,14 +41,14 @@ namespace PGC.ViewModels
             PlayerGroups = new ObservableCollection<PlayerGroup>();
 
             //// Initialize with some default players
-            //Players.Add(new Player { Name = "Alice", Score = 10 });
-            //Players.Add(new Player { Name = "Bob", Score = 20 });
-            //Players.Add(new Player { Name = "Charlie", Score = 15 });
-            //Players.Add(new Player { Name = "Diana", Score = 25 });
-            //Players.Add(new Player { Name = "Eve", Score = 30 });
-            //Players.Add(new Player { Name = "Frank", Score = 5 });
-            //Players.Add(new Player { Name = "Grace", Score = 12 });
-            //Players.Add(new Player { Name = "Heidi", Score = 18 });
+            Players.Add(new Player { Name = "Alice", Score = 10 });
+            Players.Add(new Player { Name = "Bob", Score = 20 });
+            Players.Add(new Player { Name = "Charlie", Score = 15 });
+            Players.Add(new Player { Name = "Diana", Score = 25 });
+            Players.Add(new Player { Name = "Eve", Score = 30 });
+            Players.Add(new Player { Name = "Frank", Score = 5 });
+            Players.Add(new Player { Name = "Grace", Score = 12 });
+            Players.Add(new Player { Name = "Heidi", Score = 18 });
             //Players.Add(new Player { Name = "Ivan", Score = 22 });
 
             CreateRandomGroups(); 
